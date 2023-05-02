@@ -1,32 +1,26 @@
 import React, { useState } from "react";
 import { auth } from "../firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
-function Register() {
+function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassowrd] = useState("");
 
-  const handleRegister = async (e) => {
+  const handleSignIn = async (e) => {
     e.preventDefault();
-    createUserWithEmailAndPassword(auth, email, password)
+    signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
-        console.log(user);
-        // ...
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
-        // ..
       });
   };
 
-  //   TODO: input validation
   return (
-    <form onSubmit={handleRegister}>
+    <form onSubmit={handleSignIn}>
       <label htmlFor="email">Email:</label>
       <input
         id="email"
@@ -49,20 +43,9 @@ function Register() {
         placeholder="Password"
       />
       <br />
-      <label htmlFor="confirm-password">Confirm Password:</label>
-      <input
-        autoComplete="off"
-        id="confirm-password"
-        name="confirm-password"
-        type="password"
-        value={confirmPassword}
-        onChange={(e) => setConfirmPassowrd(e.target.value)}
-        placeholder="Password"
-      />
-      <br />
-      <button type="submit">Register</button>
+      <button type="submit">Sign In</button>
     </form>
   );
 }
 
-export default Register;
+export default SignIn;
