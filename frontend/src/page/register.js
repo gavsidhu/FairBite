@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { auth } from "../firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 function Register() {
   const [email, setEmail] = useState("");
@@ -8,17 +9,19 @@ function Register() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    try {
-      const userCredential = await auth.createUserWithEmailAndPassword(
-        email,
-        password
-      );
-      const user = userCredential.user;
-      console.log("User created:", user);
-      //   TODO: clear form
-    } catch (error) {
-      console.error("Error creating user:", error);
-    }
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        console.log(user);
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorCode, errorMessage);
+        // ..
+      });
   };
 
   //   TODO: input validation
