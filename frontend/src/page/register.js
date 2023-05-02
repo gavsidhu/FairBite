@@ -60,7 +60,7 @@ function Register() {
         placeholder="Password"
       />
       <br />
-      <button type="submit">Register</button>
+      <button type="submit">Create Account</button>
     </form>
   );
 }
