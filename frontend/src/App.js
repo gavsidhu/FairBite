@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import Register from "./page/register";
 import SignIn from "./page/sign-in";
 import GettingStarted from "./page/getting-started";
+import "./index.css"
 
 function App() {
   return (
