@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const sessionRoutes = require("./routes/session")
+const userRoutes = require("./routes/user")
 const app = express();
 const dotenv = require("dotenv")
 
@@ -13,13 +14,16 @@ mongoose.connect(process.env.MONGODB_URI, {
 });
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:3000"
+}));
 
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to the Food Bites" });
 });
 
 app.use("/session", sessionRoutes)
+app.use("/user", userRoutes)
 
 const PORT = process.env.PORT || 8000;
 const server = require("http").createServer(app);
