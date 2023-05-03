@@ -6,6 +6,7 @@ import "./index.css"
 import Session from "./page/session";
 import { AuthProvider } from "./hooks/useAuth";
 import Preferences from "./page/preferences";
+import Home from "./page/home"
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/getting-started" element={<GettingStarted />} />
         <Route path="/session/:id" element={<Session />} />
+        <Route path="/" element={<Home />} />
         <Route path="/preferences" element={<Preferences />} />
         {/* Add more routes here */}
       </Routes>
