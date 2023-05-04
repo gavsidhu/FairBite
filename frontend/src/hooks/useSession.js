@@ -9,21 +9,20 @@
   export const SessionProvider = ({ children }) => {
     const navigate = useNavigate();
     const [session, setSession] = useState()
-
-    const joinSession = async () => {
-        
-    }
+    const [selectedUsers, setSelectedUsers] = useState([])
 
     const memoedValue = useMemo(
         () => ({
+          selectedUsers,
+          setSelectedUsers
         }),
-        []
+        [selectedUsers]
       );
   
     return (
-      <SessionProvider.Provider value={memoedValue}>
+      <SessionContext.Provider value={memoedValue}>
         {children}
-      </SessionProvider.Provider>
+      </SessionContext.Provider>
     );
   };
   
