@@ -1,12 +1,25 @@
 import React, { useState } from 'react';
 import RestaurantCard from './RestaurantCard';
 import {AiFillLike, AiFillDislike} from 'react-icons/ai'
+import useAuth from '../hooks/useAuth';
+import { useParams } from 'react-router-dom';
 
 const RestaurantSwiper = ({ restaurants }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-
-  const handleLike = () => {
-    // Perform any action related to liking a restaurant
+  const {user} = useAuth()
+  const { id } = useParams();
+  const handleLike = async () => {
+    const res = await fetch(`http://localhost:8000/session/${id}/like`,{
+      method: "PUT",
+      body: JSON.stringify({
+        userId: user.uid,
+        restaurantId: restaurants[currentIndex].id
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    console.log(await res.json())
     nextRestaurant();
   };
 
@@ -23,7 +36,7 @@ const RestaurantSwiper = ({ restaurants }) => {
     <div className="relative">
       <RestaurantCard restaurant={restaurants[currentIndex]} />
 
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-4">
+      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-4">
         <button
           className="bg-red-500 text-white p-4 rounded-full shadow-md"
           onClick={handleDislike}

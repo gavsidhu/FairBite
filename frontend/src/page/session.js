@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import {fetchRestaurants} from "../api/fetchRestaurants"
 import RestaurantSwiper from '../components/RestaurantSwiper';
+import { getRestaurantsByCuisine } from '../api/get-restuarants-by-cuisine';
+
 
 const Session = () => {
     const { id } = useParams();
   const [restaurants, setRestaurants] = useState([]);
 
   useEffect(() => {
-    fetchRestaurants(id).then((data) => setRestaurants(data));
-  }, [id]);
+    getRestaurantsByCuisine("chinese", "san francisco").then((res) => {
+        res.json().then((data) => {
+            setRestaurants(data.businesses)
+        })
+    })
+  }, []);
 
   return (
     <div className="max-w-xl mx-auto px4">

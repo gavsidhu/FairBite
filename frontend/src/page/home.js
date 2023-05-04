@@ -8,10 +8,13 @@ export default function Home() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [openFriendModal, setOpenFriendModal] = useState(false);
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const [userFriends, setUserFriends] = useState([]);
 
   useEffect(() => {
+    if(!user) {
+      return navigate("/sign-in")
+    }
     fetch(`http://localhost:8000/user/${user.uid}`, {
       method: "GET",
       headers: {
@@ -28,19 +31,7 @@ export default function Home() {
       });
   }, []);
 
-  console.log(userFriends);
-
-  const handleSessionStart = async () => {
-    const res = await fetch(`http://localhost:8000/session`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const data = await res.json();
-    const id = data._id;
-    navigate(`/session/${id}`);
-  };
+  console.log("friends",userFriends);
 
   const refreshUserFriends = async () => {
     const result = await fetch(`http://localhost:8000/user/${user.uid}`, {
@@ -78,6 +69,7 @@ export default function Home() {
           >
             Add Friends
           </button>
+          <button onClick={logout}>Logout</button>
         </div>
       </div>
     </>

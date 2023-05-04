@@ -10,7 +10,7 @@ export default function AddFriendModal({ open, setOpen, onFriendAdded }) {
     const res = await fetch(`http://localhost:8000/user/add-friend`, {
       method: "POST",
       body: JSON.stringify({
-        userFirebaseId: user.uid,
+        userId: user.uid,
         friendEmail: email
       }),
       headers: {
@@ -68,7 +68,7 @@ export default function AddFriendModal({ open, setOpen, onFriendAdded }) {
                             type="email"
                             name="email"
                             id="email"
-                            className="block w-full px-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
+                            className="block w-full px-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:outline-orange-300 sm:text-sm sm:leading-6"
                             placeholder="you@example.com"
                             onChange={(e) => setEmail(e.currentTarget.value)}
                           />

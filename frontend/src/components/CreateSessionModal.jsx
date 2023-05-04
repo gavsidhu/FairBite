@@ -1,8 +1,42 @@
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import ComboBox from "./ComboBox";
+import useSession from "../hooks/useSession";
+import useAuth from "../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateSessionModal({open, setOpen, friends}) {
+  const[location, setLocation] = useState("")
+  const {user} = useAuth()
+  const {selectedUsers} = useSession();
+  const navigate = useNavigate()
+
+  const startSession = async () => {
+    if (!location) {
+      alert("Please enter a location")
+    }
+    const users = [
+      {
+        _id: user.uid,
+        email: user.email
+      },
+      ...selectedUsers
+    ]
+
+    const res = await fetch(`http://localhost:8000/session`, {
+      method: "POST",
+      body: JSON.stringify({
+        users,
+        location: location
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await res.json()
+    navigate(`/session/${data._id}`)
+  }
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={setOpen}>
@@ -38,8 +72,26 @@ export default function CreateSessionModal({open, setOpen, friends}) {
                     >
                       Start a dining session
                     </Dialog.Title>
-                    <div className="mt-2 mx-3">
+                    <div className="mt-2 text-left space-y-3">
                       <ComboBox friends={friends}  />
+                      <div>
+                        <label
+                          htmlFor="location"
+                          className="block text-sm font-medium leading-6 text-gray-900"
+                        >
+                          Enter your location
+                        </label>
+                        <div className="mt-2">
+                          <input
+                            type="text"
+                            name="location"
+                            id="location"
+                            className="block w-full px-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:outline-orange-300 sm:text-sm sm:leading-6"
+                            placeholder="Los angeles"
+                            onChange={(e) => setLocation(e.currentTarget.value)}
+                          />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -53,7 +105,7 @@ export default function CreateSessionModal({open, setOpen, friends}) {
                   <button
                     type="button"
                     className="inline-flex w-full justify-center rounded-md bg-orange-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-                    onClick={() => setOpen(false)}
+                    onClick={startSession}
                   >
                     Start
                   </button>

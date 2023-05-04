@@ -1,30 +1,32 @@
 import { Combobox, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
 import { HiCheck, HiChevronUpDown } from "react-icons/hi2";
+import useSession from "../hooks/useSession";
 
 export default function ComboBox({ friends }) {
-    const [selected, setSelected] = useState([]);
+    const {selectedUsers, setSelectedUsers} = useSession();
     const [query, setQuery] = useState("");
-    console.log(selected)
   
     const filteredfriends =
       query === ""
         ? friends
         : friends.filter((friends) =>
-            friends.name
+            friends.email
               .toLowerCase()
               .replace(/\s+/g, "")
               .includes(query.toLowerCase().replace(/\s+/g, ""))
           );
   
     return (
-      <div className="w-72">
-        <Combobox multiple value={selected} onChange={setSelected}>
+      <div className="w-full">
+        <Combobox multiple value={selectedUsers} onChange={setSelectedUsers}>
           <div className="relative mt-1">
-            <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md sm:text-sm">
+            <div className="relative w-full cursor-default overflow-hidden rounded-lg border border-gray-300 bg-white text-left sm:text-sm">
               <Combobox.Input
                 className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0 focus:outline-orange-300"
-                displayValue={(friends) => friends.name}
+                displayValue={(selectedUsers) =>
+                  selectedUsers?.map((user) => user.email).join(', ')
+                }
                 onChange={(event) => setQuery(event.target.value)}
               />
               <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
@@ -49,7 +51,7 @@ export default function ComboBox({ friends }) {
                 ) : (
                   filteredfriends.map((friends) => (
                     <Combobox.Option
-                      key={friends.id}
+                      key={friends._id}
                       className={({ active }) =>
                         `relative cursor-default select-none py-2 pl-10 pr-4 ${
                           active ? "bg-orange-600 text-white" : "text-gray-900"
