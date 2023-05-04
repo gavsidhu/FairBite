@@ -16,7 +16,7 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await User.findOne({firebaseId: id});
+    const user = await User.findById(id);
     if (!user) {
       res.status(404).json({ message: "User not found" });
     } else {
@@ -40,22 +40,23 @@ router.post("/", async (req, res) => {
     }
 
     const newUser = await User.create({
-      email,
-      firebaseId,
+        _id: firebaseId,
+         email,
     });
 
     return res.status(201).json({
       user: newUser,
     });
   } catch (error) {
+    console.log(error)
     return res.status(400).json({ message: "Bad Request" });
   }
 });
 
 router.post("/add-friend", async (req, res) => {
-  const { friendEmail, userFirebaseId } = req.body;
+  const { friendEmail, userId } = req.body;
   try {
-    const user = await User.findOne({ firebaseId: userFirebaseId });
+    const user = await User.findById(userId);
     const friend = await User.findOne({ email: friendEmail });
 
     if (!friend || !user) {
@@ -63,15 +64,13 @@ router.post("/add-friend", async (req, res) => {
     }
 
     if (!user.friends.includes({
-        firebaseId: friend.firebaseId,
         email: friend.email,
-        id: friend.id
+        _id: friend.id
 
       })) {
       user.friends.push({
-        firebaseId: friend.firebaseId,
         email: friend.email,
-        id: friend.id
+        _id: friend.id
 
       });
       await user.save();
