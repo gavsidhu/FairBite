@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import useAuth from "../hooks/useAuth";
 import AddFriendModal from "../components/AddFriendModal";
 
-
 export default function Home() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -57,7 +56,11 @@ export default function Home() {
   return (
     <>
       <CreateSessionModal open={open} setOpen={setOpen} friends={userFriends} />
-      <AddFriendModal open={openFriendModal} setOpen={setOpenFriendModal} onFriendAdded={refreshUserFriends}/>
+      <AddFriendModal
+        open={openFriendModal}
+        setOpen={setOpenFriendModal}
+        onFriendAdded={refreshUserFriends}
+      />
       <div className="max-w-3xl mx-auto py-20">
         <div>
           <h1 className="text-4xl font-bold text-center">Fair Bite</h1>
@@ -70,11 +73,11 @@ export default function Home() {
             Start a Fair Bite Session
           </button>
           <button
-          className="bg-orange-500 h-16 w-[40%] mx-auto text-white text-lg font-semibold rounded-lg"
-          onClick={() => setOpenFriendModal(true)}
+            className="bg-orange-500 h-16 w-[40%] mx-auto text-white text-lg font-semibold rounded-lg"
+            onClick={() => setOpenFriendModal(true)}
           >
             Add Friends
-            </button>
+          </button>
         </div>
       </div>
     </>
