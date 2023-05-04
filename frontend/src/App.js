@@ -7,11 +7,13 @@ import Session from "./page/session";
 import { AuthProvider } from "./hooks/useAuth";
 import Preferences from "./page/preferences";
 import Home from "./page/home"
+import { SessionProvider } from "./hooks/useSession";
 
 function App() {
   return (
     <div className="App">
       <AuthProvider>
+        <SessionProvider>
       <Routes>
         <Route path="/register" element={<Register />} />
         <Route path="/sign-in" element={<SignIn />} />
@@ -21,6 +23,7 @@ function App() {
         <Route path="/preferences" element={<Preferences />} />
         {/* Add more routes here */}
       </Routes>
+      </SessionProvider>
       </AuthProvider>
     </div>
   );
