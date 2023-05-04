@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }) => {
         } else {
           // Not logged in...
           setUser(null);
-          navigate('/sign-in')
+          
         }
 
         setInitialLoading(false);
@@ -59,8 +59,18 @@ export const AuthProvider = ({ children }) => {
 
   const registerWithEmail = async (email, password) => {
     createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+      .then(async (userCredential) => {
         // Signed in
+        await fetch(`http://localhost:8000/user`, {
+          method: "POST",
+          body: JSON.stringify({
+            firebaseId: userCredential.user.uid,
+            email: userCredential.user.email,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
         setUser(userCredential.user);
         console.log(user);
         // ...
@@ -86,11 +96,26 @@ export const AuthProvider = ({ children }) => {
   };
   const signInWithGoogle = async () => {
     signInWithPopup(auth, provider)
-      .then((result) => {
+      .then(async (result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential.accessToken;
         // The signed-in user info.
+        if (
+          result.user.metadata.creationTime ===
+          result.user.metadata.lastSignInTime
+        ) {
+          await fetch(`http://localhost:8000/user`, {
+            method: "POST",
+            body: JSON.stringify({
+              firebaseId: result.user.uid,
+              email: result.user.email,
+            }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+        }
         setUser(result.user);
         // IdP data available using getAdditionalUserInfo(result)
         // ...
@@ -112,6 +137,7 @@ export const AuthProvider = ({ children }) => {
     signOut(auth)
       .then(async () => {
         setUser(null);
+        navigate("/sign-in")
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -141,5 +167,5 @@ export const AuthProvider = ({ children }) => {
 };
 
 export default function useAuth() {
-    return useContext(AuthContext);
-  }
+  return useContext(AuthContext);
+}
