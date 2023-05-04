@@ -3,21 +3,17 @@ const mongoose = require('mongoose');
 const SessionSchema = new mongoose.Schema({
   users: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-    },
+      _id: String,
+      email: String,
+    }
   ],
   likedRestaurants: [
     {
       restaurantId: String,
-      users: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'User',
-        },
-      ],
+      users: [String],
     },
   ],
+  location: String,
   expired: {
     type:Boolean,
     default: false

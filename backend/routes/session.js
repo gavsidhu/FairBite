@@ -5,15 +5,17 @@ const router = express.Router();
 
 // Create a new session
 router.post('/', async (req, res) => {
+  const {users, location} = req.body
     try {
       const session = new Session({
-        users: [],
+        users,
         likedRestaurants: [],
+        location,
         expired: false
       });
   
       const savedSession = await session.save();
-      res.json(savedSession);
+      res.status(200).json(savedSession);
     } catch (error) {
       res.status(400).send(error);
     }
