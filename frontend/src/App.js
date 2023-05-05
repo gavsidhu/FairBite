@@ -12,7 +12,7 @@ import Results from "./page/results";
 
 function App() {
   return (
-    <div className="App">
+    <div className="App font-normal">
       <AuthProvider>
         <SessionProvider>
       <Routes>

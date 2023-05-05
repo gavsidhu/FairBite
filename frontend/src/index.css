@@ -3,6 +3,8 @@
   border: 0;
   box-sizing: border-box;
 }
+@import url("https://use.typekit.net/yyk7rzk.css");
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
