@@ -1,10 +1,34 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { BsStarFill, BsStarHalf, BsStar } from 'react-icons/bs';
 
 function validateResultFormat(data) {
   // Check if the data object has a 'result' property, and it is a non-empty string
   return data && typeof data.result === "string" && data.result.length > 0;
 }
+
+const renderRating = (rating) => {
+  const fullStars = Math.floor(rating);
+  const halfStar = rating % 1 >= 0.5;
+  const emptyStars = Math.floor(5 - rating);
+
+  return (
+    <>
+      {Array(fullStars)
+        .fill()
+        .map((_, index) => (
+          <BsStarFill key={index} className="text-yellow-400" />
+        ))}
+      {halfStar && <BsStarHalf className="text-yellow-400" />}
+      {Array(emptyStars)
+        .fill()
+        .map((_, index) => (
+          <BsStar key={index} className="text-yellow-400" />
+        ))}
+    </>
+  );
+};
+
 
 export default function Results() {
   const { id } = useParams();
@@ -64,7 +88,11 @@ export default function Results() {
             </p>
             <p className="text-gray-600">{result.display_phone}</p>
             <p className="text-gray-600">
-              {result.rating} / 5 ({result.review_count} reviews)
+              <span className="flex items-center">
+                {renderRating(result.rating)}
+                <span className="ml-1">{result.rating}</span>
+              </span>{" "}
+              / 5 ({result.review_count} reviews)
             </p>
             {result.hours && result.hours[0].is_open_now ? (
               <p className="text-gray-600">Open now</p>
