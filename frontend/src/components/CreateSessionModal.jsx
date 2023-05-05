@@ -15,6 +15,7 @@ export default function CreateSessionModal({open, setOpen, friends}) {
   const startSession = async () => {
     if (!location) {
       alert("Please enter a location")
+      return;
     }
     const users = [
       {
