@@ -1,5 +1,6 @@
 const express = require("express");
 const Session = require("../database/models/session");
+const shuffleArray = require("../utils/shuffleArray")
 
 const router = express.Router();
 
@@ -99,7 +100,7 @@ router.put('/:id/like', async (req, res) => {
   });
 
   // Get session results
-router.get('/:id/results', async (req, res) => {
+  router.get('/:id/results', async (req, res) => {
     try {
       const session = await Session.findById(req.params.id);
   
@@ -108,12 +109,33 @@ router.get('/:id/results', async (req, res) => {
         return;
       }
   
+      // If the result is already set, return it as the response
+      if (session.result) {
+        res.json({ result: session.result });
+        return;
+      }
+  
       // Find the restaurant(s) with the most overlapping likes
       const sortedRestaurants = session.likedRestaurants.sort(
         (a, b) => b.users.length - a.users.length
       );
   
-      res.json(sortedRestaurants);
+      let selectedResult;
+  
+      // Check if there are no overlapping liked restaurants
+      if (sortedRestaurants[0].users.length === 1) {
+        // Shuffle the restaurant array
+        shuffleArray(sortedRestaurants);
+        selectedResult = sortedRestaurants[0].restaurantId;
+      } else {
+        selectedResult = sortedRestaurants[0].restaurantId;
+      }
+  
+      // Update the session with the selected result and save it to the database
+      session.result = selectedResult;
+      await session.save();
+  
+      res.json({ result: selectedResult });
     } catch (error) {
       res.status(400).send(error);
     }
