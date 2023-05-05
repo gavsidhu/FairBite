@@ -17,6 +17,7 @@ const SessionSchema = new mongoose.Schema({
       users: [String],
     },
   ],
+  result: String,
   location: String,
   expired: {
     type:Boolean,
