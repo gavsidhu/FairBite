@@ -8,6 +8,7 @@ import { AuthProvider } from "./hooks/useAuth";
 import Preferences from "./page/preferences";
 import Home from "./page/home"
 import { SessionProvider } from "./hooks/useSession";
+import Results from "./page/results";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/session/:id" element={<Session />} />
         <Route path="/" element={<Home />} />
         <Route path="/preferences" element={<Preferences />} />
+        <Route path="/results/:id" element={<Results />} />
         {/* Add more routes here */}
       </Routes>
       </SessionProvider>
