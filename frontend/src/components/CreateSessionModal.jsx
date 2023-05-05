@@ -25,7 +25,7 @@ export default function CreateSessionModal({open, setOpen, friends}) {
     ]
     console.log(users)
 
-    const res = await fetch(`http://localhost:8000/session`, {
+    const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/session`, {
       method: "POST",
       body: JSON.stringify({
         users,

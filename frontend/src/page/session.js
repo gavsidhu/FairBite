@@ -42,7 +42,7 @@ const Session = () => {
 
       // Expire the session after 15 seconds
       const timer = setTimeout(async () => {
-        await fetch(`http://localhost:8000/session/${id}/expire`, {
+        await fetch(`${process.env.REACT_APP_BACKEND_URL}/session/${id}/expire`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -85,7 +85,7 @@ const Session = () => {
     let location;
     let cuisines;
     //get location from session
-    fetch(`http://localhost:8000/session/${id}`, {
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/session/${id}`, {
       method: "Get",
       headers: {
         "Content-Type": "application/json",
@@ -95,7 +95,7 @@ const Session = () => {
       location = data.location;
       console.log("location: ", location);
       //get cuisine preferences from user
-      fetch(`http://localhost:8000/user/${user?.uid}`, {
+      fetch(`${process.env.REACT_APP_BACKEND_URL}/user/${user?.uid}`, {
         method: "Get",
         headers: {
           "Content-Type": "application/json",
@@ -106,7 +106,7 @@ const Session = () => {
         console.log("cuisine: ", cuisines);
         const cuisine = cuisines.join(",");
         fetch(
-          `http://localhost:8000/restaurant?location=${location}&cuisine=${cuisine}`
+          `${process.env.REACT_APP_BACKEND_URL}/restaurant?location=${location}&cuisine=${cuisine}`
         ).then(async (res) => {
           const data = await res.json();
           console.log(data.businesses);

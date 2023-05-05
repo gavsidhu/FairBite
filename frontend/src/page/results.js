@@ -12,7 +12,7 @@ export default function Results() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`http://localhost:8000/session/${id}/results`)
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/session/${id}/results`)
       .then(async (res) => {
         if (!res.ok) {
           throw new Error(`Failed to fetch results: ${res.statusText}`);
@@ -28,7 +28,7 @@ export default function Results() {
         }
       })
       .then((result) => {
-        return fetch(`http://localhost:8000/restaurant/${result}`);
+        return fetch(`${process.env.REACT_APP_BACKEND_URL}/restaurant/${result}`);
       })
       .then(async (res) => {
         if (!res.ok) {
