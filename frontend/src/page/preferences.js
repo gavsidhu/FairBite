@@ -44,7 +44,7 @@ function Preferences() {
         (index) => cuisineArray[index].alias
       );
       console.log(preferences)
-      await fetch("http://localhost:8000/user/add-preferences", {
+      await fetch(`${process.env.REACT_APP_BACKEND_URL}/user/add-preferences`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

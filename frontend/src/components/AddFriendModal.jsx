@@ -7,7 +7,7 @@ export default function AddFriendModal({ open, setOpen, onFriendAdded }) {
   const {user} = useAuth()
 
   const addFriend = async () => {
-    const res = await fetch(`http://localhost:8000/user/add-friend`, {
+    const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/user/add-friend`, {
       method: "POST",
       body: JSON.stringify({
         userId: user.uid,

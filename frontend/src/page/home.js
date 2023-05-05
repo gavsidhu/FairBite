@@ -17,7 +17,7 @@ export default function Home() {
     if(!user) {
       return navigate("/sign-in")
     }
-    fetch(`http://localhost:8000/user/${user.uid}`, {
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/user/${user.uid}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -36,7 +36,7 @@ export default function Home() {
   console.log("friends",userFriends);
 
   const refreshUserFriends = async () => {
-    const result = await fetch(`http://localhost:8000/user/${user.uid}`, {
+    const result = await fetch(`${process.env.REACT_APP_BACKEND_URL}/user/${user.uid}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }) => {
     createUserWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
         // Signed in
-        await fetch(`http://localhost:8000/user`, {
+        await fetch(`${process.env.REACT_APP_BACKEND_URL}/user`, {
           method: "POST",
           body: JSON.stringify({
             firebaseId: userCredential.user.uid,
@@ -106,7 +106,7 @@ export const AuthProvider = ({ children }) => {
           result.user.metadata.creationTime ===
           result.user.metadata.lastSignInTime
         ) {
-          await fetch(`http://localhost:8000/user`, {
+          await fetch(`${process.env.REACT_APP_BACKEND_URL}/user`, {
             method: "POST",
             body: JSON.stringify({
               firebaseId: result.user.uid,
