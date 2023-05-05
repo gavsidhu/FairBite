@@ -18,7 +18,7 @@ export default function AddFriendModal({ open, setOpen, onFriendAdded }) {
       },
     });
     await onFriendAdded()
-    console.log(await res.json())
+    setOpen(false)
   }
   return (
     <Transition.Root show={open} as={Fragment}>
