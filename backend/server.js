@@ -6,6 +6,16 @@ const userRoutes = require("./routes/user");
 const app = express();
 const dotenv = require("dotenv");
 const restaurantRoutes = require("./routes/restaurant");
+const Session = require("./database/models/session");
+const server = require("http").createServer(app);
+const io = require('socket.io')(server, {
+  cors: {
+    origin: 'http://localhost:3000', // Your client-side URL
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['my-custom-header'],
+    credentials: true,
+  },
+});
 
 dotenv.config();
 
@@ -30,7 +40,53 @@ app.use("/user", userRoutes);
 app.use("/restaurant", restaurantRoutes);
 
 const PORT = process.env.PORT || 8000;
-const server = require("http").createServer(app);
+io.on("connection", (socket) => {
+  console.log("User connected:", socket.id);
+
+  // Listen for a new user joining the session
+  socket.on("join-session", async (sessionId, userId) => {
+    try {
+      // Find the session in the database
+      const session = await Session.findById(sessionId);
+
+      if (!session) {
+        console.log("Session not found:", sessionId);
+        socket.emit("error", "Session not found");
+        return;
+      }
+
+       // Check if the session is already expired
+    if (session.expired) {
+      console.log("Session expired:", sessionId);
+      socket.emit("session-expired", sessionId);
+      return;
+    }
+
+      // Find the user in the session
+      const user = session.users.find((user) => user._id === userId);
+
+      // Update the user's joined status if not already true
+      if (user && !user.joined) {
+        user.joined = true;
+        await session.save();
+
+        // Notify other users that a new user has joined
+        socket.broadcast.emit("user-joined", sessionId, userId);
+      }
+
+      // Check if all users have joined the session
+      const allUsersJoined = session.users.every((user) => user.joined);
+
+      if (allUsersJoined) {
+        // Emit an event to notify all clients that all users have joined
+        io.emit("all-users-joined", sessionId);
+      }
+    } catch (error) {
+      console.error("Error while joining the session:", error);
+      socket.emit("error", "Error while joining the session");
+    }
+  });
+});
 
 if (process.env.NODE_ENV !== "test") {
   server.listen(PORT, () => {
