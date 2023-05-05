@@ -56,7 +56,7 @@ function Preferences() {
       
 
     return(
-        <div className="flex flex-col items-center justify-center mb-10">
+      <div className="flex flex-col items-center justify-center mb-10">
       <h1 className="mb-10 mt-10 ml-10 text-5xl font-bold">Welcome {email}</h1>
       <h2 className="text-2xl">What do you want to eat?</h2>
       <h2 className="mb-5">
@@ -103,12 +103,16 @@ function Preferences() {
         <div></div>
         <div className="fixed bottom-10 left-1/2 transform -translate-x-1/2">
           <div className="flex items-center justify-center mb-8">
-            <button
-              className="px-4 py-2 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700"
-              onClick={() => submitPreferences(email, selectedCuisineIndexes)}
-            >
-              Submit
-            </button>
+          {selectedCuisineIndexes.length >= 3 ? (
+              <button
+                className="px-4 py-2 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700"
+                onClick={() => submitPreferences(email, selectedCuisineIndexes)}
+              >
+                Submit
+              </button>
+            ) : (
+              <span className="font-bold text-red-600">Please select at least 3 cuisine types</span>
+            )}
           </div>
           <div className="flex flex-row items-center justify-center space-x-4">
             <button

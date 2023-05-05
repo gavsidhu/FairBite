@@ -73,6 +73,12 @@ export default function Home() {
           >
             Add Friends
           </button>
+          <button
+            className="bg-[#F8972A] font-normal h-16 w-[40%] mx-auto text-white text-lg font-semibold rounded-lg"
+            onClick={() => navigate("/preferences")}
+          >
+            Edit Preferences
+          </button>
         </div>
       </div>
     </>
