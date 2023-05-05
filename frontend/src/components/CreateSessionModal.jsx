@@ -37,7 +37,7 @@ export default function CreateSessionModal({open, setOpen, friends}) {
     });
 
     const data = await res.json()
-    setSessionUrl(`http://localhost:3000/session/${data._id}`)
+    setSessionUrl(`${process.env.REACT_APP_FRONTEND_URL}/session/${data._id}`)
     //navigate(`/session/${data._id}`)
   }
   return (
