@@ -5,7 +5,11 @@ const SessionSchema = new mongoose.Schema({
     {
       _id: String,
       email: String,
-    }
+      joined: {
+        type: Boolean,
+        default: false,
+      },
+    },
   ],
   likedRestaurants: [
     {

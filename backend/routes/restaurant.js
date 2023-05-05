@@ -5,11 +5,12 @@ const axios = require("axios");
 router.get("/", async (req, res) => {
   const { location, cuisine } = req.query;
   if (!location || !cuisine) {
-    res.status(400).json({ message: "Missing required fields" });
+    return res.status(400).json({ message: "Missing required fields" });
   }
 
+  const cuisines = cuisine.split(',').map(c => `categories=${c}`).join('&');
   const { data: restaurants } = await axios.get(
-    `https://api.yelp.com/v3/businesses/search?location=${location}&term=restaurant&categories=${cuisine}`,
+    `https://api.yelp.com/v3/businesses/search?location=${location}&term=restaurant&${cuisines}`,
     {
       headers: {
         Authorization: `Bearer ${process.env.YELP_API_KEY}`,

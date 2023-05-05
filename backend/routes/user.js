@@ -15,8 +15,7 @@ router.get("/", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   try {
-    const { id } = req.params;
-    const user = await User.findById(id);
+    const user = await User.findById(req.params.id);
     if (!user) {
       res.status(404).json({ message: "User not found" });
     } else {
@@ -54,33 +53,46 @@ router.post("/", async (req, res) => {
 });
 
 router.post("/add-friend", async (req, res) => {
-  const { friendEmail, userId } = req.body;
-  try {
-    const user = await User.findById(userId);
-    const friend = await User.findOne({ email: friendEmail });
-
-    if (!friend || !user) {
-      return res.status(400).json({ message: "User does not exist" });
+    const { friendEmail, userId } = req.body;
+    try {
+      const user = await User.findById(userId);
+      const friend = await User.findOne({ email: friendEmail });
+  
+      if (!friend || !user) {
+        return res.status(400).json({ message: "User does not exist" });
+      }
+  
+      let userAdded = false;
+      let friendAdded = false;
+  
+      if (!user.friends.some(friend => friend._id.toString() === friend.id)) {
+        user.friends.push({
+          email: friend.email,
+          _id: friend.id
+        });
+        await user.save();
+        userAdded = true;
+      }
+  
+      if (!friend.friends.some(f => f._id.toString() === user.id)) {
+        friend.friends.push({
+          email: user.email,
+          _id: user.id
+        });
+        await friend.save();
+        friendAdded = true;
+      }
+  
+      if (userAdded || friendAdded) {
+        res.status(201).json(user);
+      } else {
+        res.status(200).json({ message: "Friends already added" });
+      }
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({ message: "Bad Request" });
     }
-
-    if (!user.friends.includes({
-        email: friend.email,
-        _id: friend.id
-
-      })) {
-      user.friends.push({
-        email: friend.email,
-        _id: friend.id
-
-      });
-      await user.save();
-    }
-    res.status(201).json(user)
-  } catch (error) {
-    console.log(error);
-    return res.status(400).json({ message: "Bad Request" });
-  }
-});
+  });
 
 // Cannot get /add-preferences in console
 router.post('/add-preferences', async (req, res) => {

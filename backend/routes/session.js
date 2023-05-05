@@ -3,6 +3,22 @@ const Session = require("../database/models/session");
 
 const router = express.Router();
 
+// Get session by id
+router.get('/:id', async (req, res) => {
+  try {
+    const session = await Session.findById(req.params.id);
+
+    if (!session) {
+      res.status(404).send('Session not found');
+      return;
+    }
+
+    res.json(session);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
+
 // Create a new session
 router.post('/', async (req, res) => {
   const {users, location} = req.body
