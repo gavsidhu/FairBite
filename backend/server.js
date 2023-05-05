@@ -86,6 +86,45 @@ io.on("connection", (socket) => {
       socket.emit("error", "Error while joining the session");
     }
   });
+
+  // Listen for the "like-restaurant" event
+socket.on("like-restaurant", async (sessionId, userId, restaurantId) => {
+  try {
+    // Find the session in the database
+    const session = await Session.findById(sessionId);
+
+    if (!session) {
+      console.log("Session not found:", sessionId);
+      socket.emit("error", "Session not found");
+      return;
+    }
+
+    // Update the session data with the liked restaurant
+    const likedRestaurant = session.likedRestaurants.find(
+      (restaurant) => restaurant.restaurantId === restaurantId
+    );
+
+    if (likedRestaurant) {
+      if (!likedRestaurant.users.includes(userId)) {
+        likedRestaurant.users.push(userId);
+      }
+    } else {
+      session.likedRestaurants.push({
+        restaurantId: restaurantId,
+        users: [userId],
+      });
+    }
+
+    // Save the updated session data
+    await session.save();
+
+    // Emit an event to broadcast the updated session data to all connected clients
+    io.emit("session-data-updated", sessionId, session);
+  } catch (error) {
+    console.error("Error while updating session data:", error);
+    socket.emit("error", "Error while updating session data");
+  }
+});
 });
 
 if (process.env.NODE_ENV !== "test") {
