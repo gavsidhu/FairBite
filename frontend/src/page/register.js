@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import useAuth from "../hooks/useAuth"
 import { useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar";
 
 function Register() {
   const [email, setEmail] = useState("");
@@ -18,6 +19,8 @@ function Register() {
 
   //   TODO: input validation
   return (
+    <>
+    <Navbar />
     <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-lg">
         <h1 className="text-center text-2xl font-bold text-orange-600 sm:text-3xl">
@@ -152,6 +155,7 @@ function Register() {
         </div>
       </div>
     </div>
+    </>
   );
 }
 
