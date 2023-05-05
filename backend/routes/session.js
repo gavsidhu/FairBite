@@ -102,8 +102,7 @@ router.put('/:id/like', async (req, res) => {
   // Get session results
   router.get('/:id/results', async (req, res) => {
     try {
-      const session = await Session.findById(req.params.id);
-  
+      const session = await Session.findById(req.params.id);  
       if (!session) {
         res.status(404).send('Session not found');
         return;
