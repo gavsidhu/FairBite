@@ -10,7 +10,7 @@ const Session = require("./database/models/session");
 const server = require("http").createServer(app);
 const io = require('socket.io')(server, {
   cors: {
-    origin: 'http://localhost:3000', // Your client-side URL
+    origin: 'https://sesl-1-level-4-team-6.vercel.app',
     methods: ['GET', 'POST'],
     allowedHeaders: ['my-custom-header'],
     credentials: true,
@@ -27,7 +27,7 @@ mongoose.connect(process.env.MONGODB_URI, {
 app.use(express.json());
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://sesl-1-level-4-team-6.vercel.app",
   })
 );
 
