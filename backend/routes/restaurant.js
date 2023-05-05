@@ -20,4 +20,17 @@ router.get("/", async (req, res) => {
   return res.json(restaurants);
 });
 
+// Get restaurant by id
+router.get("/:id", async (req, res) => {
+  const response = await axios.get(`https://api.yelp.com/v3/businesses/${req.params.id}`, {
+    headers: {
+      Authorization: `Bearer ${process.env.YELP_API_KEY}`,
+    },
+  })
+
+  return res.status(200).json(response.data);
+})
+
+
+
 module.exports = router;
