@@ -72,7 +72,7 @@ export const AuthProvider = ({ children }) => {
           },
         });
         setUser(userCredential.user);
-        console.log(user);
+        navigate("/preferences")
         // ...
       })
       .catch((error) => {
@@ -88,6 +88,7 @@ export const AuthProvider = ({ children }) => {
       .then((userCredential) => {
         // Signed in
         setUser(userCredential.user);
+        navigate("/")
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -115,8 +116,12 @@ export const AuthProvider = ({ children }) => {
               "Content-Type": "application/json",
             },
           });
+          setUser(result.user);
+          navigate("/preferences")
+          return
         }
         setUser(result.user);
+        navigate("/")
         // IdP data available using getAdditionalUserInfo(result)
         // ...
         console.log(user);
