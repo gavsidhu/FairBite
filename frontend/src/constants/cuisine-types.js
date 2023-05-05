@@ -38,7 +38,7 @@ export const CUISINE_TYPES = {
   hawaiian: "Hawaiian",
   himalayan: "Himalayan",
   hungarian: "Hungarian",
-  indian: "Indian",
+  indpak: "Indian",
   indonesian: "Indonesian",
   irish: "Irish",
   italian: "Italian",
@@ -91,3 +91,8 @@ export const CUISINE_TYPES = {
   waffles: "Waffles",
   wraps: "Wraps",
 };
+
+export const cuisineArray = Object.entries(CUISINE_TYPES).map(([alias, cuisine]) => ({
+  alias,
+  cuisine,
+}));
