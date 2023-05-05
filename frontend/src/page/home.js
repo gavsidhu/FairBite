@@ -11,6 +11,7 @@ export default function Home() {
   const { user, logout } = useAuth();
   const [userFriends, setUserFriends] = useState([]);
 
+
   useEffect(() => {
     if(!user) {
       return navigate("/sign-in")
