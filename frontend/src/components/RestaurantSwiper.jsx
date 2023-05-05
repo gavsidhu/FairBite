@@ -3,23 +3,15 @@ import RestaurantCard from './RestaurantCard';
 import {AiFillLike, AiFillDislike} from 'react-icons/ai'
 import useAuth from '../hooks/useAuth';
 import { useParams } from 'react-router-dom';
+import socket from '../socket';
 
 const RestaurantSwiper = ({ restaurants }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const {user} = useAuth()
   const { id } = useParams();
   const handleLike = async () => {
-    const res = await fetch(`http://localhost:8000/session/${id}/like`,{
-      method: "PUT",
-      body: JSON.stringify({
-        userId: user.uid,
-        restaurantId: restaurants[currentIndex].id
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-    console.log(await res.json())
+    socket.emit("like-restaurant", id, user.uid, restaurants[currentIndex].id);
+
     nextRestaurant();
   };
 
