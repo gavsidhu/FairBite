@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function CreateSessionModal({open, setOpen, friends}) {
   const[location, setLocation] = useState("")
+  const [sessionUrl, setSessionUrl] = useState("")
   const {user} = useAuth()
   const {selectedUsers} = useSession();
   const navigate = useNavigate()
@@ -22,6 +23,7 @@ export default function CreateSessionModal({open, setOpen, friends}) {
       },
       ...selectedUsers
     ]
+    console.log(users)
 
     const res = await fetch(`http://localhost:8000/session`, {
       method: "POST",
@@ -35,7 +37,8 @@ export default function CreateSessionModal({open, setOpen, friends}) {
     });
 
     const data = await res.json()
-    navigate(`/session/${data._id}`)
+    setSessionUrl(`http://localhost:3000/session/${data._id}`)
+    //navigate(`/session/${data._id}`)
   }
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -91,8 +94,13 @@ export default function CreateSessionModal({open, setOpen, friends}) {
                             onChange={(e) => setLocation(e.currentTarget.value)}
                           />
                         </div>
+                        
                       </div>
+                      <div className="w-full overflow-x-auto">
+                      <a className="whitespace-pre-line text-blue-500 hover:text-blue-600" href={sessionUrl}>{sessionUrl? sessionUrl: null}</a>
                     </div>
+                    </div>
+                    
                   </div>
                 </div>
                 <div className="mt-5 sm:mt-6 flex flex-row justify-between items-center space-x-3">
