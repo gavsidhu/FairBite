@@ -1,26 +1,55 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+
+function validateResultFormat(data) {
+  // Check if the data object has a 'result' property, and it is a non-empty string
+  return data && typeof data.result === "string" && data.result.length > 0;
+}
 
 export default function Results() {
   const { id } = useParams();
   const [result, setResult] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`http://localhost:8000/session/${id}/results`).then(async (res) => {
-      const data = await res.json();
-      console.log("results: ", data);
-      fetch(`http://localhost:8000/restaurant/${data.result}`).then(
-        async (res) => {
-          const restaurantData = await res.json();
-          setResult(restaurantData);
-          console.log("restaurant: ", restaurantData);
+    fetch(`http://localhost:8000/session/${id}/results`)
+      .then(async (res) => {
+        if (!res.ok) {
+          throw new Error(`Failed to fetch results: ${res.statusText}`);
         }
-      );
-    });
+        const data = await res.json();
+        console.log("results: ", data);
+
+        // Validate the result format
+        if (validateResultFormat(data)) {
+          return data.result;
+        } else {
+          throw new Error("Invalid result format");
+        }
+      })
+      .then((result) => {
+        return fetch(`http://localhost:8000/restaurant/${result}`);
+      })
+      .then(async (res) => {
+        if (!res.ok) {
+          throw new Error(`Failed to fetch restaurant: ${res.statusText}`);
+        }
+        const restaurantData = await res.json();
+        setResult(restaurantData);
+        console.log("restaurant: ", restaurantData);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }, []);
 
   return (
     <div className="max-w-xl mx-auto px-4">
+      <div className="py-16 text-center">
+        <h1 className="font-display text-5xl font-bold">
+          Your FairBite Result
+        </h1>
+      </div>
       {result && (
         <div className="bg-white p-4 rounded-lg shadow-md">
           <img
@@ -45,6 +74,14 @@ export default function Results() {
           </div>
         </div>
       )}
+      <div className="py-6 text-center">
+        <button
+          className="bg-[#F8972A] h-16 w-[40%] mx-auto text-white text-lg font-semibold rounded-lg"
+          onClick={() => navigate("/")}
+        >
+          Home
+        </button>
+      </div>
     </div>
   );
 }

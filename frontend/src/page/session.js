@@ -15,6 +15,10 @@ const Session = () => {
   const [elapsedTime, setElapsedTime] = useState(15);
 
   useEffect(() => {
+    if(!user) {
+      return navigate("/sign-in")
+    }
+  
     // Join the session when the component is mounted
     socket.emit("join-session", id, user.uid);
 
@@ -54,6 +58,14 @@ const Session = () => {
       };
     });
 
+    socket.on("session-data-updated", (updatedSessionId, updatedSessionData) => {
+      console.log("session data updated")
+      if (updatedSessionId === id) {
+        // Update the local session data with the received updatedSessionData
+        // (Add your logic to update the local session data)
+      }
+    });
+
     socket.on("session-expired", (sessionId) => {
       console.log("Session expired:", sessionId);
       // Redirect to the results page
@@ -65,6 +77,7 @@ const Session = () => {
       socket.off("user-joined");
       socket.off("all-users-joined");
       socket.off("session-expired");
+      socket.off("session-data-updated");
     };
   }, []);
 
@@ -91,28 +104,51 @@ const Session = () => {
         const data = await res.json();
         cuisines = data.preferences;
         console.log("cuisine: ", cuisines);
-        const cuisine = cuisines.join(',');
-        fetch(`http://localhost:8000/restaurant?location=${location}&cuisine=${cuisine}`)
-      .then(async (res) => {
-        const data = await res.json();
-        console.log(data.businesses)
-        setRestaurants(data.businesses);
-      });
+        const cuisine = cuisines.join(",");
+        fetch(
+          `http://localhost:8000/restaurant?location=${location}&cuisine=${cuisine}`
+        ).then(async (res) => {
+          const data = await res.json();
+          console.log(data.businesses);
+          setRestaurants(data.businesses);
+        });
       });
     });
   }, []);
 
   return (
     <div className="max-w-xl mx-auto px4">
-      {message && <div>{message}</div>}
-      {expired && <p>Session Expired Loading Results</p>}
-      {restaurants.length > 0 && allUsersJoined && !expired ? (
+      {message && (
+        <div className="text-center">
+          <p className="text-lg">{message}</p>
+        </div>
+      )}
+      {expired && (
+        <div className="py-16 text-center">
+          <h1 className="font-display text-5xl font-bold">
+            Session expired. Loading results...
+          </h1>
+        </div>
+      )}
+      {restaurants.length > 0 && allUsersJoined && !expired && (
         <>
           <p>{elapsedTime} seconds</p>
           <RestaurantSwiper restaurants={restaurants} />
         </>
-      ) : (
-        <p>Loading...{message && <div>{message}</div>}</p>
+      )}
+      {!restaurants.length > 0 && (
+        <div className="py-16 text-center">
+          <h1 className="font-display text-5xl font-bold">
+            Waiting for all users to join...
+          </h1>
+        </div>
+      )}
+      {!allUsersJoined && restaurants.length > 0 && (
+        <div className="py-16 text-center">
+          <h1 className="font-display text-5xl font-bold">
+            Waiting for all users to join...
+          </h1>
+        </div>
       )}
     </div>
   );
