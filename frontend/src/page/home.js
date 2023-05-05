@@ -3,6 +3,7 @@ import CreateSessionModal from "../components/CreateSessionModal";
 import { useEffect, useState } from "react";
 import useAuth from "../hooks/useAuth";
 import AddFriendModal from "../components/AddFriendModal";
+import Navbar from "../components/Navbar";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -47,6 +48,7 @@ export default function Home() {
 
   return (
     <>
+    <Navbar />
       <CreateSessionModal open={open} setOpen={setOpen} friends={userFriends} />
       <AddFriendModal
         open={openFriendModal}
@@ -54,23 +56,23 @@ export default function Home() {
         onFriendAdded={refreshUserFriends}
       />
       <div className="max-w-3xl mx-auto py-20">
-        <div>
-          <h1 className="text-4xl font-bold text-center">Fair Bite</h1>
+        <div className="space-y-5 text-center">
+          <h1 className="text-6xl font-bold text-center font-display">FairBite</h1>
+          <p className="font-normal text-lg">Start a FairBite session to decide where to eat with your friends.</p>
         </div>
         <div className="w-full flex flex-col space-y-6 py-8">
           <button
             onClick={() => setOpen(true)}
-            className="bg-orange-500 h-16 w-[40%] mx-auto text-white text-lg font-semibold rounded-lg"
+            className="bg-[#F8972A] font-normal h-16 w-[40%] mx-auto text-white text-lg font-semibold rounded-lg"
           >
-            Start a Fair Bite Session
+            Start a FairBite Session
           </button>
           <button
-            className="bg-orange-500 h-16 w-[40%] mx-auto text-white text-lg font-semibold rounded-lg"
+            className="bg-[#F8972A] h-16 w-[40%] mx-auto text-white text-lg font-semibold rounded-lg"
             onClick={() => setOpenFriendModal(true)}
           >
             Add Friends
           </button>
-          <button onClick={logout}>Logout</button>
         </div>
       </div>
     </>
