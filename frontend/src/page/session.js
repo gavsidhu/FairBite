@@ -46,6 +46,7 @@ const Session = () => {
         });
         setExpired(true);
         clearInterval(countdown);
+        navigate(`/results/${id}`);
       }, 15000);
 
       return () => {
@@ -57,7 +58,7 @@ const Session = () => {
       console.log("Session expired:", sessionId);
       // Redirect to the results page
       setExpired(true);
-      navigate("/results");
+      navigate(`/results/${id}`);
     });
 
     return () => {
