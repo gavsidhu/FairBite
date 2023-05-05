@@ -82,6 +82,25 @@ router.post("/add-friend", async (req, res) => {
   }
 });
 
+// Cannot get /add-preferences in console
+router.post('/add-preferences', async (req, res) => {
+  try {
+    const { email, preferences } = req.body;
+    const user = await User.findOne({ email: email });
+
+    if (!user) {
+      return res.status(400).json({ message: "User does not exist" });
+    }
+    user.preferences = preferences;
+    await user.save();
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Bad Request' });
+  }
+});
+
+
 router.patch("/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -102,5 +121,7 @@ router.delete("/:id", async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
+
+
 
 module.exports = router;

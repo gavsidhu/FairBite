@@ -1,15 +1,19 @@
 import React, { useState } from "react";
 import useAuth from "../hooks/useAuth"
+import { useNavigate } from "react-router-dom";
 
 function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassowrd] = useState("");
   const {registerWithEmail} = useAuth()
+  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
-    e.preventDefault();
-    await registerWithEmail(email, password)
+      e.preventDefault();
+      const user = await registerWithEmail(email, password);
+
+      navigate("/preferences", { state: { email: email } });
   };
 
   //   TODO: input validation

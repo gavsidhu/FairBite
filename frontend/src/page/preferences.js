@@ -1,8 +1,24 @@
 import { CUISINE_TYPES } from "../constants";
-import React, { useState } from "react";
+import React from "react";
+import { useEffect, useState } from "react";
 import useAuth from "../hooks/useAuth"
+import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 function Preferences() {
+
+    const { user } = useAuth();
+    const navigate = useNavigate();
+
+    // Return to register page if not registered
+    useEffect(() => {
+        if(!user) {
+            return navigate("/register");
+        }
+    }, [navigate, user]);
+
+    const location = useLocation();
+    const email = location.state?.email;
 
     const [page, setPage] = useState(1);
     const [selectedCuisineIndexes, setSelectedCuisineIndexes] = useState([]);
@@ -24,9 +40,20 @@ function Preferences() {
         });
     };
 
+    const submitPreferences = async (email, selectedCuisineIndexes) => {
+        const preferences = selectedCuisineIndexes.map(index => Object.values(CUISINE_TYPES)[index]);
+        await fetch('http://localhost:8000/add-preferences', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email, preferences })
+        });
+      };      
+
     return(
         <div className="flex flex-col items-center justify-center mb-10">
-            <h1 className="mb-10 mt-10 ml-10 text-5xl font-bold">Welcome</h1> {/* Welcome {username} */}
+            <h1 className="mb-10 mt-10 ml-10 text-5xl font-bold">Welcome {email}</h1> {/* Welcome {username} */}
             <h2 className="text-2xl">What do you want to eat?</h2>
             <h2 className="mb-5">Choose 3 to 5 cuisines to personalize your FairBite experience</h2>
             <h2 className="text-2xl font-bold text-green-600">
@@ -54,16 +81,13 @@ function Preferences() {
                     ))}
                 </ul>
                 <div>
-                    {/* This displays the selected checkboxes */}
-                    {selectedCuisineIndexes.map((index) => Object.values(CUISINE_TYPES)[index])}
-                </div>
-                <div>
 
                 </div>
                 <div className="fixed bottom-10 left-1/2 transform -translate-x-1/2">
                     <div className="flex items-center justify-center mb-8">
                         <button
-                            className="px-4 py-2 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700">
+                            className="px-4 py-2 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700"
+                            onClick={() => submitPreferences(email, selectedCuisineIndexes)}>
                             Submit
                         </button>
                     </div>
