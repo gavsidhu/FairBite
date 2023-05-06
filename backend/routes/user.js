@@ -53,46 +53,46 @@ router.post("/", async (req, res) => {
 });
 
 router.post("/add-friend", async (req, res) => {
-    const { friendEmail, userId } = req.body;
-    try {
-      const user = await User.findById(userId);
-      const friend = await User.findOne({ email: friendEmail });
-  
-      if (!friend || !user) {
-        return res.status(400).json({ message: "User does not exist" });
-      }
-  
-      let userAdded = false;
-      let friendAdded = false;
-  
-      if (!user.friends.some(friend => friend._id.toString() === friend.id)) {
-        user.friends.push({
-          email: friend.email,
-          _id: friend.id
-        });
-        await user.save();
-        userAdded = true;
-      }
-  
-      if (!friend.friends.some(f => f._id.toString() === user.id)) {
-        friend.friends.push({
-          email: user.email,
-          _id: user.id
-        });
-        await friend.save();
-        friendAdded = true;
-      }
-  
-      if (userAdded || friendAdded) {
-        res.status(201).json(user);
-      } else {
-        res.status(200).json({ message: "Friends already added" });
-      }
-    } catch (error) {
-      console.log(error);
-      return res.status(400).json({ message: "Bad Request" });
+  const { friendEmail, userId } = req.body;
+  try {
+    const user = await User.findById(userId);
+    const friend = await User.findOne({ email: friendEmail });
+
+    if (!friend || !user) {
+      return res.status(400).json({ message: "User does not exist" });
     }
-  });
+
+    let userAdded = false;
+    let friendAdded = false;
+
+    if (!user.friends.some(existingFriend => existingFriend._id.toString() === friend.id)) {
+      user.friends.push({
+        email: friend.email,
+        _id: friend.id
+      });
+      await user.save();
+      userAdded = true;
+    }
+
+    if (!friend.friends.some(existingFriend => existingFriend._id.toString() === user.id)) {
+      friend.friends.push({
+        email: user.email,
+        _id: user.id
+      });
+      await friend.save();
+      friendAdded = true;
+    }
+
+    if (userAdded || friendAdded) {
+      res.status(201).json(user);
+    } else {
+      res.status(200).json({ message: "Friends already added" });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ message: "Bad Request" });
+  }
+});
 
 // Cannot get /add-preferences in console
 router.post('/add-preferences', async (req, res) => {
