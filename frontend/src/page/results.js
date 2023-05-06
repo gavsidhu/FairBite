@@ -90,9 +90,9 @@ export default function Results() {
             <p className="text-gray-600">
               <span className="flex items-center">
                 {renderRating(result.rating)}
-                <span className="ml-1">{result.rating}</span>
+                <span className="ml-1">{result.rating} / 5 </span>
               </span>{" "}
-              / 5 ({result.review_count} reviews)
+              ({result.review_count} reviews)
             </p>
             {result.hours && result.hours[0].is_open_now ? (
               <p className="text-gray-600">Open now</p>
