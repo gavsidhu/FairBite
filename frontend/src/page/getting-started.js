@@ -1,18 +1,14 @@
-import React from "react";
-import { CUISINE_TYPES } from "../constants";
+import Navbar from "../components/Navbar";
 
-function GettingStarted() {
+export default function GettingStarted() {
   return (
-    <div>
-      <h1>Getting Started</h1>
-      <h2>Cusines</h2>
-      <ul>
-        {Object.keys(CUISINE_TYPES).map((key) => (
-          <li key={key}>{CUISINE_TYPES[key]}</li>
-        ))}
-      </ul>
+    <>
+    <Navbar />
+    <div className="max-w-3xl mx-auto py-16">
+      <video controls muted  >
+      <source className="w-full" src="/FairBite-demo.mp4" type="video/mp4"/>
+        </video>
     </div>
-  );
+    </>
+  )
 }
-
-export default GettingStarted;
