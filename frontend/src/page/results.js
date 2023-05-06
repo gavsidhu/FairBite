@@ -99,7 +99,6 @@ export default function Results() {
             ) : (
               <p className="text-gray-600">Closed</p>
             )}
-            <p className="text-gray-600">Yelp Link: {result.url}</p>
           </div>
         </div>
       )}
